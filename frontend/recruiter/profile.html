@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Recruiter Profile | ProConnect</title>
+
+<style>
+
+:root{
+  --primary:#0a66c2;
+  --bg:#f4f7fb;
+  --card:#ffffff;
+  --border:#e5e7eb;
+  --text:#111827;
+  --muted:#6b7280;
+  --shadow:0 4px 18px rgba(0,0,0,0.05);
+  --radius:14px;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Segoe UI,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+
+.profile-header{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:20px;
+  display:flex;
+  gap:20px;
+  align-items:flex-start;
+  box-shadow:var(--shadow);
+}
+
+.company-logo{
+  width:100px;
+  height:100px;
+  border-radius:16px;
+  object-fit:cover;
+  border:1px solid var(--border);
+}
+
+.profile-info{
+  flex:1;
+}
+
+.profile-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:12px;
+}
+
+input,
+textarea{
+  width:100%;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#fff;
+  font-size:14px;
+}
+
+textarea{
+  min-height:120px;
+  resize:vertical;
+}
+
+input:disabled,
+textarea:disabled{
+  background:#f9fafb;
+  color:#111827;
+}
+
+.actions-right{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+button{
+  border:none;
+  border-radius:10px;
+  padding:11px 14px;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.2s;
+}
+
+button:hover{
+  opacity:0.9;
+}
+
+.edit-btn,
+.post-btn{
+  background:var(--primary);
+  color:#fff;
+}
+
+.analytics-btn{
+  background:#374151;
+  color:#fff;
+}
+
+.card{
+  background:var(--card);
+  margin-top:20px;
+  padding:20px;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+
+.card h2{
+  font-size:20px;
+  margin-bottom:16px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+
+.stat-box{
+  background:linear-gradient(135deg,#0a66c2,#4dabf7);
+  color:#fff;
+  padding:20px;
+  border-radius:14px;
+  text-align:center;
+}
+
+.stat-box h3{
+  font-size:30px;
+  margin-bottom:6px;
+}
+
+.job-card{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
+  margin-top:12px;
+}
+
+.job-card h3{
+  margin-bottom:8px;
+}
+
+.job-card p{
+  color:var(--muted);
+  margin-bottom:12px;
+}
+
+.actions{
+  margin-top:20px;
+  display:flex;
+  gap:12px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+thead{
+  background:#f3f6f9;
+}
+
+th,
+td{
+  text-align:left;
+  padding:14px;
+  border-bottom:1px solid var(--border);
+}
+
+tr:hover{
+  background:#f9fbff;
+}
+
+a{
+  text-decoration:none;
+  color:var(--primary);
+  font-weight:600;
+}
+
+.empty{
+  color:var(--muted);
+  text-align:center;
+  padding:20px 0;
+}
+
+@media(max-width:768px){
+
+  .profile-header{
+    flex-direction:column;
+  }
+
+  .profile-grid{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .actions{
+    flex-direction:column;
+  }
+
+  table{
+    font-size:13px;
+  }
+}
+
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="profile-header">
+    <img id="logoPreview" class="company-logo" src="https://via.placeholder.com/100?text=Logo"/>
+    <div class="profile-info">
+      <input id="companyName" placeholder="Company Name"disabled/>
+      <div class="profile-grid">
+        <input id="industry" placeholder="Industry" disabled/>
+        <input id="location" placeholder="Location" disabled/>
+      </div>
+      <div style="margin-top:12px">
+        <input id="companyWebsite" placeholder="Website" disabled/>
+      </div>
+    </div>
+    <div class="actions-right">
+      <input type="file" id="logoInput" hidden/>
+      <button onclick="uploadLogo()">Upload Logo</button>
+      <button id="editBtn" class="edit-btn" onclick="toggleEdit()"> Edit</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>About Company</h2>
+    <textarea id="aboutText" disabled></textarea>
+  </div>
+  <div class="card">
+    <h2>Application Stats</h2>
+    <div class="stats">
+      <div class="stat-box">
+        <h3 id="totalApps">0</h3>
+        <p>Total Applications</p>
+      </div>
+      <div class="stat-box">
+        <h3 id="shortlisted">0</h3>
+        <p>Shortlisted</p>
+      </div>
+      <div class="stat-box">
+        <h3 id="rejected">0</h3>
+        <p>Rejected</p>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Active Jobs</h2>
+    <div id="jobsContainer" class="empty">Loading jobs...</div>
+  </div>
+  <div class="card">
+    <h2>Recent Applications</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Job</th>
+          <th>Status</th>
+          <th>Resume</th>
+        </tr>
+      </thead>
+      <tbody id="applicationsTable"></tbody>
+    </table>
+  </div>
+  <div class="actions">
+    <button class="post-btn" onclick="goToPostJob()">+ Post Job</button> 
+    <button class="analytics-btn" onclick="goToAnalytics()">View Analytics</button>
+  </div>
+</div>
+<script>
+const API_BASE = "http://localhost:5000";
+const token = localStorage.getItem("accessToken");
+
+if (!token) {
+  location.href = "/auth/login.html";
+}
+
+const $ = (id) =>document.getElementById(id);
+
+const companyName =$("companyName");
+const industry =$("industry");
+const locationInput =$("location");
+const companyWebsite =$("companyWebsite");
+const aboutText =$("aboutText");
+const logoPreview =$("logoPreview");
+const logoInput =$("logoInput");
+const editBtn =$("editBtn");
+const totalApps =$("totalApps");
+const shortlisted =$("shortlisted");
+const rejected =$("rejected");
+const jobsContainer =$("jobsContainer");
+const applicationsTable =$("applicationsTable");
+
+let originalData = {};
+let editMode = false;
+let isSaving = false;
+
+function escapeHTML(str = "") {
+
+  return str.replace(
+    /[&<>"']/g,
+    m => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[m])
+  );
+}
+
+logoPreview.onerror = () => {
+  logoPreview.onerror = null;
+  logoPreview.src ="https://via.placeholder.com/100?text=Logo";
+};
+
+async function apiRequest(url,options = {}) {
+  try {
+    const res = await fetch(url, {
+      ...options,
+      headers: {
+        Authorization:
+          "Bearer " + token,
+
+        ...(options.headers || {})
+      }
+    });
+
+    if (res.status === 401) {
+
+      localStorage.removeItem("accessToken");
+      location.href ="/auth/login.html";
+      return null;
+    }
+
+    const data =await res.json();
+
+    if (!res.ok) {
+      throw new Error(
+        data.message ||
+        "Request failed"
+      );
+    }
+
+    return data;
+  } catch (err) {
+    console.error("API Error:",err );
+    return null;
+  }
+}
+
+function goToPostJob() {
+  location.href ="/recruiter/job-management.html";
+}
+
+function goToAnalytics() {
+  location.href ="/recruiter/analytics.html";
+}
+async function loadProfile() {
+  const response =await apiRequest(`${API_BASE}/api/recruiter/profile`);
+  if (!response) return;
+  const data =response.data;
+  if (!data) return;
+
+  originalData = {
+    ...data
+  };
+
+  companyName.value =data.companyName || "";
+  industry.value =data.industry || "";
+  locationInput.value =data.location || "";
+  companyWebsite.value =data.website || "";
+  aboutText.value = data.about || "";
+
+  logoPreview.src =
+    data.logo
+      ? (
+          data.logo.startsWith("http")
+            ? data.logo
+            : API_BASE + data.logo
+        )
+      : "https://via.placeholder.com/100?text=Logo";
+}
+async function toggleEdit() {
+
+  if (!editMode) {
+
+    editMode = true;
+
+    [
+      companyName,
+      industry,
+      locationInput,
+      companyWebsite,
+      aboutText
+    ].forEach(el => {
+      el.disabled = false;
+    });
+
+    editBtn.innerText =
+      "Save";
+
+    return;
+  }
+
+  await updateProfile();
+
+  editMode = false;
+
+  [
+    companyName,
+    industry,
+    locationInput,
+    companyWebsite,
+    aboutText
+  ].forEach(el => {
+    el.disabled = true;
+  });
+
+  editBtn.innerText =
+    "Edit";
+}
+
+async function updateProfile() {
+
+  if (isSaving) return;
+
+  if (
+    !companyName.value.trim()
+  ) {
+
+    return alert(
+      "Company name required"
+    );
+  }
+
+  isSaving = true;
+
+  try {
+
+    const data =
+      await apiRequest(
+        `${API_BASE}/api/recruiter/profile`,
+        {
+          method: "PUT",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+            companyName:
+              companyName.value.trim(),
+
+            industry:
+              industry.value.trim(),
+
+            location:
+              locationInput.value.trim(),
+
+            website:
+              companyWebsite.value.trim(),
+
+            about:
+              aboutText.value.trim()
+          })
+        }
+      );
+
+    if (!data) return;
+
+    alert(
+      "Profile updated successfully"
+    );
+
+  } finally {
+
+    isSaving = false;
+  }
+}
+
+function uploadLogo() {
+
+  logoInput.click();
+}
+
+logoInput.onchange =async () => {
+
+    if (
+      !logoInput.files.length
+    ) return;
+
+    const file =
+      logoInput.files[0];
+
+    if (
+      !file.type.startsWith(
+        "image/"
+      )
+    ) {
+
+      return alert(
+        "Only image files allowed"
+      );
+    }
+
+    if (
+      file.size >
+      2 * 1024 * 1024
+    ) {
+
+      return alert(
+        "Logo must be under 2MB"
+      );
+    }
+
+    try {
+
+      const fd =
+        new FormData();
+
+      fd.append(
+        "logo",
+        file
+      );
+
+      const data =
+        await apiRequest(
+          `${API_BASE}/api/recruiter/upload-logo`,
+          {
+            method: "POST",
+            body: fd
+          }
+        );
+
+      if (!data) return;
+
+      logoPreview.src =
+        data.logo.startsWith(
+          "http"
+        )
+          ? data.logo
+          : API_BASE + data.logo;
+
+      alert(
+        "Logo uploaded successfully"
+      );
+
+    } catch (err) {
+
+      console.error(err);
+
+      alert(
+        "Logo upload failed"
+      );
+    }
+};
+
+async function loadStats() {
+
+  const data =
+    await apiRequest(
+      `${API_BASE}/api/recruiter/stats`
+    );
+
+  if (!data) return;
+
+  totalApps.innerText =
+    data.applicants || 0;
+
+  shortlisted.innerText =
+    data.interviews || 0;
+
+  rejected.innerText =
+    (data.applicants || 0) -
+    (data.interviews || 0);
+}
+
+async function loadJobs() {
+
+  const jobs =
+    await apiRequest(
+      `${API_BASE}/api/jobs/my`
+    );
+
+  if (!jobs) {
+
+    jobsContainer.innerHTML =
+      `<p class="empty">
+        Failed to load jobs
+      </p>`;
+
+    return;
+  }
+
+  if (!jobs.length) {
+
+    jobsContainer.innerHTML =
+      `<p class="empty">
+        No jobs posted yet
+      </p>`;
+
+    return;
+  }
+
+  jobsContainer.innerHTML =
+    jobs.map(job => `
+
+      <div class="job-card">
+
+        <h3>
+          ${escapeHTML(
+            job.title || ""
+          )}
+        </h3>
+
+        <p>
+          ${escapeHTML(
+            job.location ||
+            "Remote"
+          )}
+
+          •
+
+          ${escapeHTML(
+            job.salary ||
+            "Not specified"
+          )}
+        </p>
+
+        <button
+          onclick="viewApplicants('${job._id}')"
+          class="edit-btn"
+        >
+          View Applicants
+        </button>
+
+      </div>
+
+    `).join("");
+}
+
+function viewApplicants(id) {
+
+  location.href =
+    `/recruiter/applicants.html?jobId=${id}`;
+}
+
+async function loadApplications() {
+
+  applicationsTable.innerHTML =
+    `<tr>
+      <td colspan="4">
+        Loading...
+      </td>
+    </tr>`;
+
+  const res =
+    await apiRequest(
+      `${API_BASE}/api/applications/recruiter`
+    );
+
+  const apps =
+    Array.isArray(res)
+      ? res
+      : res?.data || [];
+
+  if (!apps.length) {
+
+    applicationsTable.innerHTML =
+      `<tr>
+        <td colspan="4">
+          No applications found
+        </td>
+      </tr>`;
+
+    return;
+  }
+
+  applicationsTable.innerHTML =
+    apps.map(app => {
+
+      const resume =
+        app.applicant?.resume
+          ? (
+              app.applicant.resume.startsWith(
+                "http"
+              )
+                ? app.applicant.resume
+                : API_BASE +
+                  app.applicant.resume
+            )
+          : null;
+
+      return `
+        <tr>
+
+          <td>
+            ${escapeHTML(
+              app.applicant?.name ||
+              "N/A"
+            )}
+          </td>
+
+          <td>
+            ${escapeHTML(
+              app.job?.title ||
+              "N/A"
+            )}
+          </td>
+
+          <td>
+            ${escapeHTML(
+              app.status ||
+              "Pending"
+            )}
+          </td>
+
+          <td>
+            ${
+              resume
+                ? `
+                <a
+                  href="${resume}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View
+                </a>
+              `
+                : "No Resume"
+            }
+          </td>
+
+        </tr>
+      `;
+    }).join("");
+}
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    loadProfile();
+    loadStats();
+    loadJobs();
+    loadApplications();
+  }
+);
+</script>
+</body>
+</html>

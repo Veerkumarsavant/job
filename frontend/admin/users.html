@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Users | ProConnect</title>
+  <link rel="stylesheet" href="../css/users.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="admin-app">
+  <aside class="sidebar">
+    <h2>🚀 ProConnect</h2>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="users.html" class="active">Users</a>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <h3>User Management</h3>
+      <div>
+        <button id="bulkDeleteBtn" class="btn-danger small hidden">Delete Selected</button>
+        <button id="themeToggle" class="btn-icon">🌙</button>
+        <button id="logoutBtn" class="btn-danger">Logout</button>
+      </div>
+    </header>
+    <div class="content">
+      <div class="card filters">
+        <input type="text" id="searchInput" placeholder="🔍 Search name or email">
+        <select id="roleFilter">
+          <option value="all">All Roles</option>
+          <option value="user">Job Seeker</option>
+          <option value="recruiter">Recruiter</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div class="card table-card">
+        <div id="loadingState" class="hidden">Loading users...</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAll"></th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="userList"></tbody>
+          </table>
+        </div>
+        <div id="emptyState" class="hidden">No users found</div>
+        <div class="pagination">
+          <button id="prevPage">Prev</button>
+          <span id="pageInfo"></span>
+          <button id="nextPage">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script defer src="../js/config.js"></script>
+<script defer src="../js/utils/api.js"></script>
+<script defer src="../js/admin/users.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  /*if (typeof protect === "function") {
+    protect("admin");
+  } else {
+    window.location.href = "/auth/login.html";
+  }*/
+  if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
+  }
+  document.getElementById("themeToggle")
+    .addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      localStorage.setItem(
+        "theme",
+        document.body.classList.contains("dark") ? "dark" : "light"
+      );
+    });
+  document.getElementById("logoutBtn").onclick = () => {
+    if (typeof logout === "function") logout();
+    else {
+      localStorage.clear();
+      window.location.href = "/auth/login.html";
+    }
+  };
+});
+</script>
+</body>
+</html>

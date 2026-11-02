@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recruiter Dashboard | ProConnect</title>
+<link rel="stylesheet" href="../css/recruiter.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+<script src="/socket.io/socket.io.js" defer></script>
+<script src="../js/config.js" defer></script>
+<script src="../js/utils/api.js" defer></script>
+<script src="../js/auth.js" defer></script>
+<script src="../js/recruiter/dashboard.js" defer></script>
+</head>
+<body>
+<header class="navbar">
+  <div class="nav-left">Recruiter Dashboard</div>
+  <nav class="nav-right">
+    <a href="./job-management.html">Jobs</a>
+    <a href="./profile.html">Profile</a>
+    <button id="themeBtn" aria-label="Toggle Dark Mode">🌙</button>
+    <button id="logoutBtn">Logout</button>
+  </nav>
+</header>
+<main class="admin-container">
+  <section class="metrics">
+    <div class="card"><h3>Total Job Posts</h3><p id="totalJobs">0</p></div>
+    <div class="card"><h3>Total Applicants</h3><p id="totalApplicants">0</p></div>
+    <div class="card"><h3>Interviews Scheduled</h3><p id="interviews">0</p></div>
+  </section>
+  <section class="charts">
+    <div class="chart-card"><h3>Applicants per Job</h3><canvas id="jobsChart"></canvas></div>
+    <div class="chart-card"><h3>Weekly Hiring Trend</h3><canvas id="trendChart"></canvas></div>
+  </section>
+  <section class="breakdown"><h3>Jobs Breakdown</h3><div id="jobList"><p>Loading...</p></div>
+  </section>
+  <section class="quick-links">
+    <a href="./candidate-ranking.html">📊 Candidate Ranking</a>
+    <a href="./analytics.html">📈 Analytics</a>
+  </section>
+</main>
+</body>
+</html>

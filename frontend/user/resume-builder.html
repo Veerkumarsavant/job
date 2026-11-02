@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advanced Resume Builder | ProConnect</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Create professional AI-powered resumes with ATS optimization.">
+<link rel="stylesheet"href="../css/builder.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="builder-app">
+  <aside class="builder-sidebar">
+    <div>
+      <h2>ProConnect</h2>
+      <nav>
+        <a class="active">Resume Builder</a>
+        <a href="#">Templates</a>
+        <a href="#">Analytics</a>
+      </nav>
+    </div>
+    <div class="sidebar-footer">
+      <div class="premium-card">
+        <h4>AI Resume Pro</h4>
+        <p>Optimize resumes for recruiters and ATS systems.</p>
+      </div>
+    </div>
+  </aside>
+  <main class="builder-main">
+    <header class="builder-topbar">
+      <div class="topbar-left">
+        <strong>AI Resume Builder</strong>
+        <span id="autoSaveStatus" class="status">Saved</span>
+        <span class="status live">🟢 Live Sync</span>
+      </div>
+      <div class="topbar-right">
+        <button id="themeToggle" class="btn-icon" aria-label="Toggle Theme"> 🌙</button>
+      </div>
+    </header>
+    <div class="builder-content">
+      <section class="editor-panel">
+        <div class="card">
+          <h3>Personal Information</h3>
+          <input id="nameInput" placeholder="Full Name">
+          <input id="titleInput" placeholder="Professional Title">
+          <input id="emailInput" placeholder="Email">
+          <input id="phoneInput" placeholder="Phone Number">
+          <input id="locationInput" placeholder="Location">
+          <input id="linkedinInput" placeholder="LinkedIn URL">
+          <input id="githubInput"placeholder="GitHub URL">
+        </div>
+        <div class="card">
+          <h3>Professional Summary</h3>
+          <textarea id="summaryInput" rows="5" placeholder="Write professional summary..." aria-label="Professional Summary"></textarea>
+          <button id="rewriteBtn" class="btn-primary" aria-label="Rewrite with AI">🤖 AI Rewrite</button>
+        </div>
+        <div class="card">
+          <h3>Skills</h3>
+          <input id="skillsInput" placeholder="React, Node.js, MongoDB, etc." aria-label="Skills" type="text">
+        </div>
+        <div class="card">
+          <h3>Experience</h3>
+          <div id="experienceContainer"></div>
+          <button id="addExperienceBtn" class="btn-primary" aria-label="Add Experience">+ Add Experience</button>
+        </div>
+        <div class="card">
+          <h3>Education</h3>
+          <div id="educationContainer"></div>
+          <button id="addEducationBtn" class="btn-primary" aria-label="Add Education">+ Add Education</button>
+        </div>
+        <div class="card">
+          <h3>Projects</h3>
+          <div id="projectsContainer"></div>
+          <button id="addProjectBtn" class="btn-primary" aria-label="Add Project">+ Add Project</button>
+        </div>
+        <div class="card">
+          <h3>Certifications</h3>
+          <div id="certificationContainer"></div>
+          <button id="addCertificationBtn" class="btn-primary" aria-label="Add Certification">+ Add Certification</button>
+        </div>
+        <div class="card">
+          <h3>ATS Analyzer</h3>
+          <input id="targetRoleInput" placeholder="Target Role">
+          <textarea id="jobDescriptionInput" rows="6" placeholder=" Paste job description here..."></textarea>
+          <button id="analyzeJobBtn" class="btn-primary"> 🎯 Analyze ATS Match
+          </button>
+          <div class="ats-score-box">
+            <strong> ATS Match:</strong>
+            <span id="atsMatch"> 0%</span>
+          </div>
+        </div>
+        <div class="card">
+          <h3> AI Cover Letter</h3>
+          <textarea id="coverLetterPreview" rows="8" placeholder=" Generated cover letter..."></textarea>
+          <button id="generateCoverBtn" class="btn-primary">✨ Generate Cover Letter</button>
+        </div>
+        <div class="card">
+          <h3>Upload Resume</h3>
+          <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" aria-label="Upload Resume File">
+          <button id="uploadBtn" class="btn-primary" aria-label="Upload Resume">Upload Resume</button>
+        </div>
+        <div class="card">
+          <h3> Resume Score</h3>
+          <div class="progress-container">
+            <div id="scoreBar"></div>
+          </div>
+          <p id="scorePercent"> 0%</p>
+        </div>
+        <div class="card">
+          <h3>Quick Actions</h3>
+          <div class="quick-actions">
+            <button id="downloadBtn" class="btn-primary">⬇ Download PDF</button>
+            <button id="shareBtn" class="btn-secondary"> 🔗 Share Resume</button>
+            <button id="duplicateResumeBtn" class="btn-secondary">  📄 Duplicate Resume</button>
+            <button id="printResumeBtn" class="btn-secondary">🖨 Print Resume</button>
+            <button id="clearResumeBtn" class="btn-danger">  🗑 Clear Resume</button>
+          </div>
+        </div>
+      </section>
+      <section class="preview-panel" aria-label="Resume Preview">
+        <div class="preview-header">
+          <h3>Live Resume Preview</h3>
+          <span class="preview-badge" aria-label="Resume is AI Optimized">AI Optimized</span>
+        </div>
+        <div id="resumepreview" class="resume-preview modern" role="region" aria-label="Resume Preview"></div>
+        <div class="card">
+          <h3>Version Timeline</h3>
+          <div id="versionTimeline"><p>No versions yet</p></div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+<script src="../js/utils/api.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="../js/user/builder.js"></script>
+<script>
+
+const themeToggle =
+  document.getElementById(
+    "themeToggle"
+  );
+
+if (localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark");
+}
+
+themeToggle.onclick = () => {
+  document.body.classList.toggle("dark");
+  localStorage.setItem("theme",document.body.classList.contains("dark")? "dark": "light");
+};
+</script>
+</body>
+</html>

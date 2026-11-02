@@ -1,0 +1,120 @@
+
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: #f5f7fb;
+  color: #1e293b;
+}
+
+
+
+h2 {
+  text-align: center;
+  margin: 20px 0;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+
+
+#applications {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 10px 15px;
+}
+
+
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease-in-out;
+  border-left: 5px solid transparent;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+}
+
+
+
+.card h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: #0f172a;
+}
+
+.card p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #475569;
+}
+
+
+
+.status-applied {
+  color: #64748b;
+}
+
+.status-reviewing {
+  color: #f59e0b;
+  font-weight: 500;
+}
+
+.status-accepted {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.status-rejected {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+
+.card.applied {
+  border-left-color: #64748b;
+}
+
+.card.reviewing {
+  border-left-color: #f59e0b;
+}
+
+.card.accepted {
+  border-left-color: #16a34a;
+}
+
+.card.rejected {
+  border-left-color: #dc2626;
+}
+
+
+
+button {
+  margin-top: 12px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+
+
+#applications p {
+  text-align: center;
+  color: #64748b;
+  font-size: 16px;
+  margin-top: 40px;
+}

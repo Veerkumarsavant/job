@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recruiter Analytics | ProConnect</title>
+  <link rel="stylesheet"href="../css/analytics.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"defer></script>
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-left">
+      <h1 class="logo">ProConnect</h1>
+      <nav class="nav-links"aria-label="Main Navigation">
+        <!--<a href="../pages/feed.html">Feed</a>
+        <a href="../pages/jobs.html">Jobs</a>-->
+        <a href="../pages/connections.html">Connections</a>
+        <a href="../recruiter/profile.html">Profile</a>
+      </nav>
+    </div>
+    <div class="nav-right">
+      <button id="themeToggle"class="icon-btn"type="button"aria-label="Toggle Theme"> 🌙</button>
+      <button id="logoutBtn" class="logout-btn" type="button"> Logout</button>
+    </div>
+  </header>
+  <main class="admin-container">
+    <section class="filters">
+      <div class="filter-group">
+        <label for="dateRange">Date Range</label>
+        <select id="dateRange">
+          <option value="7"> Last 7 Days</option>
+          <option value="30"selected>Last 30 Days</option>
+          <option value="90">Last 90 Days</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="datePicker">Custom Range</label>
+        <input id="datePicker" placeholder="Select range">
+      </div>
+      <div class="filter-group">
+        <label for="jobFilter">Job</label>
+        <select id="jobFilter">
+          <option value="all"> All Jobs</option>
+        </select>
+      </div>
+    </section>
+    <section class="metrics">
+      <article class="card metric-card">
+        <h2>Total Applicants</h2>
+        <p id="totalApplicants" class="metric-value">--</p>
+      </article>
+      <article class="card metric-card">
+        <h2>Scheduled Interviews</h2>
+        <p id="scheduledCount" class="metric-value"> --</p>
+      </article>
+      <article class="card metric-card">
+        <h2>Completed Interviews</h2>
+        <p id="completedCount" class="metric-value"> --</p>
+      </article>
+      <article class="card metric-card">
+        <h2>Conversion Rate</h2>
+        <p id="conversionRate" class="metric-value"> --</p>
+      </article>
+    </section>
+    <section class="activity-section">
+      <div class="activity-header">
+        <h2>Live Activity</h2>
+      </div>
+      <div id="liveEvents" class="activity-feed"></div>
+    </section>
+    <section class="chart-section">
+      <h2>Applicant Growth</h2>
+      <div class="chart-wrapper">
+        <canvas id="growthChart"></canvas>
+      </div>
+    </section>
+    <section class="chart-section">
+      <h2>Interview Status Breakdown</h2>
+      <div class="chart-wrapper">
+        <canvas id="statusChart"></canvas>
+      </div>
+    </section>
+    <section class="chart-section">
+      <h2>AI Ranking Usage</h2>
+      <div class="chart-wrapper">
+        <canvas id="aiChart"></canvas>
+      </div>
+    </section>
+    <section class="chart-section">
+      <h2> Hiring Funnel</h2>
+      <div class="chart-wrapper">
+        <canvas id="funnelChart"></canvas>
+      </div>
+    </section>
+  </main>
+  <div id="loadingOverlay" class="loading-overlay" aria-hidden="true">
+    <div class="spinner"></div>
+    <p>Loading analytics...</p>
+  </div>
+  <script src="/socket.io/socket.io.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"defer></script>
+  <script src="../js/core/theme.js" defer></script>
+  <script src="../js/utils/api.js" defer></script>
+  <script src="../js/recruiter/analytics.js"defer></script>
+</body>
+</html>

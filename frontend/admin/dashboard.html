@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard | ProConnect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="../css/admin.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="navbar">
+  <div class="nav-left">🚀 ProConnect Admin</div>
+  <div class="nav-right">
+    <a href="dashboard.html" class="active">Dashboard</a>
+    <a href="users.html">Users</a>
+    <button id="themeToggle" class="btn-icon">🌙</button>
+    <button id="logoutBtn" class="btn-danger">Logout</button>
+  </div>
+</div>
+<div class="admin-container">
+  <div class="metrics">
+    <div class="card"><h3>Total Users</h3><p id="totalUsers">0</p></div>
+    <div class="card"><h3>Total Jobs</h3><p id="totalJobs">0</p></div>
+    <div class="card"><h3>Total Posts</h3><p id="totalPosts">0</p></div>
+  </div>
+  <div class="filters">
+    <label>Date Range:</label>
+    <select id="dateRange">
+      <option value="7">Last 7 Days</option>
+      <option value="30" selected>Last 30 Days</option>
+      <option value="90">Last 90 Days</option>
+    </select>
+  </div>
+<div class="chart-section card"><h3>User Growth</h3><canvas id="growthChart"></canvas></div>
+<div class="chart-section card"><h3>AI Usage</h3><canvas id="aiChart"></canvas></div>
+<div class="chart-section card"><h3>Revenue</h3><canvas id="revenueChart"></canvas></div>
+</div>
+<script src="../js/config.js"></script>
+<script src="../js/utils/api.js"></script>
+<script src="../js/admin/dashboard.js"></script>
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const toggle = document.getElementById("themeToggle");
+  if (toggle) {
+    toggle.onclick = () => {
+      document.body.classList.toggle("dark");
+
+      localStorage.setItem(
+        "theme",
+        document.body.classList.contains("dark") ? "dark" : "light"
+      );
+
+      if (window.loadAdminData) loadAdminData();
+    };
+  }
+
+  const logout = document.getElementById("logoutBtn");
+  if (logout) {
+    logout.onclick = () => {
+      localStorage.clear();
+      window.location = "/auth/login.html";
+    };
+  }
+
+});
+</script>
+</body>
+</html>

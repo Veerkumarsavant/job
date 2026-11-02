@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interview Scheduling | ProConnect</title>
+<link rel="stylesheet" href="../css/interviews.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+<div class="navbar">
+  <div class="nav-left">Interview Scheduling</div>
+  <div class="nav-right">
+    <a href="dashboard.html">Dashboard</a>
+    <button onclick="logout()">Logout</button>
+  </div>
+</div> 
+<div class="admin-container">
+  <div class="card">
+    <h3>Schedule Interview</h3>
+    <select id="jobSelect">
+      <option value="">Select Job</option>
+    </select>
+    <select id="candidateSelect">
+      <option value="">Select Candidate</option>
+    </select>
+    <input id="date" type="datetime-local">
+    <button onclick="scheduleInterview()">Schedule Interview</button>
+    <p id="statusMsg"></p>
+  </div>
+  <div class="card">
+    <h3>Upcoming Interviews</h3>
+    <div id="interviewList">Loading...</div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/utils/api.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/recruiter/interviews.js"></script>
+<script>
+(async () => {
+  const user = await requireAuth("recruiter");
+  if (!user) return;
+})();
+</script>
+</body>
+</html>

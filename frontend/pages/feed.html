@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark light">
+  <title>Feed | ProConnect</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap">
+  <script src="/js/core/theme.js" defer></script>
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/feed.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to feed</a>
+
+<header class="navbar">
+  <a class="navbar__brand" href="/">ProConnect</a>
+
+  <nav aria-label="Primary">
+    <a href="/user/profile.html">Profile</a>
+    <a href="/pages/jobs.html">Jobs</a>
+    <a href="/user/messages.html">Messages</a>
+    <a href="/pages/notifications.html" aria-label="Notifications">
+      <span aria-hidden="true">🔔</span>
+      <span id="notificationBadge" class="badge" hidden>0</span>
+    </a>
+  </nav>
+
+  <button type="button" id="navbarLogoutBtn" class="btn btn--danger btn--sm">
+    Logout
+  </button>
+</header>
+
+<!-- Toasts: announced politely by screen readers -->
+<div id="notificationContainer" class="toast-container"
+     role="status" aria-live="polite"></div>
+
+<main id="main" class="feed-container">
+  <h1 class="visually-hidden">Your feed</h1>
+
+  <aside class="left-sidebar" aria-label="Your profile">
+    <div class="profile-card">
+      <img
+        id="profileAvatar"
+        class="profile-avatar"
+        src="/images/default-avatar.png"
+        alt="Your profile picture"
+        width="90" height="90"
+      >
+
+      <h2 id="profileName">User</h2>
+      <p id="profileHeadline">No headline added</p>
+
+      <div class="profile-actions">
+        <a class="btn btn--primary btn--block" href="/user/profile.html">
+          View Profile
+        </a>
+        <button type="button" id="profileLogoutBtn" class="btn btn--danger btn--block">
+          Logout
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <section class="feed" aria-label="Posts">
+
+    <div class="create-post">
+      <label for="postContent" class="visually-hidden">Write a post</label>
+      <textarea id="postContent" placeholder="Share something..."></textarea>
+
+      <label for="postImage" class="visually-hidden">Attach an image</label>
+      <input type="file" id="postImage" accept="image/*">
+
+      <div id="imagePreview"></div>
+
+      <div class="create-post__actions">
+        <button type="button" id="publishPost" class="btn btn--primary">
+          Post
+        </button>
+      </div>
+    </div>
+
+    <div id="feedPosts" class="feed__posts"></div>
+
+    <div id="emptyFeed" class="empty-state hidden">
+      No posts yet 🚀
+    </div>
+
+  </section>
+
+</main>
+
+<!-- Classic script first so the `io` global exists; the module runs after parsing -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/feed.js" type="module"></script>
+
+</body>
+</html>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | ProConnect</title>
+
+    <link rel="stylesheet" href="../css/register.css">
+
+    <style>
+        .strength-container {
+            width: 100%;
+            height: 8px;
+            background: #eee;
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        #strengthBar {
+            height: 100%;
+            width: 0%;
+            transition: all .3s ease;
+        }
+
+        .weak { background: #ff4d4d; }
+        .medium { background: #ffa500; }
+        .strong { background: #2ecc71; }
+
+        .password-rules {
+            font-size: 14px;
+            margin-top: 10px;
+            padding-left: 18px;
+            display: none;
+        }
+
+        .password-rules li {
+            margin-bottom: 4px;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        #togglePassword {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 14px;
+            color: #555;
+            user-select: none;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79,70,229,.2);
+        }
+
+        button {
+            transition: .3s ease;
+        }
+
+        button:disabled {
+            opacity: .7;
+            cursor: not-allowed;
+        }
+
+        .error-msg {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .success { color: #2ecc71; }
+        .error { color: #ff4d4d; }
+    </style>
+</head>
+
+<body>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+        <h2>Create Account</h2>
+        <p class="auth-subtitle">Join ProConnect</p>
+
+        <div class="form-group">
+            <label for="name">Full Name</label>
+            <input
+                id="name"
+                type="text"
+                placeholder="Enter your name"
+                autocomplete="name"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input
+                id="email"
+                type="email"
+                placeholder="Enter email"
+                autocomplete="email"
+                inputmode="email"
+                autocapitalize="off"
+                spellcheck="false"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+
+            <div class="password-wrapper">
+                <input
+                    id="password"
+                    type="password"
+                    placeholder="Create password"
+                    autocomplete="new-password"
+                    required
+                >
+
+                <span id="togglePassword">Show</span>
+            </div>
+
+            <div class="strength-container">
+                <div id="strengthBar"></div>
+            </div>
+
+            <p id="strengthText">Password strength</p>
+
+            <ul class="password-rules">
+                <li id="rule-length">❌ At least 8 characters</li>
+                <li id="rule-upper">❌ Uppercase letter</li>
+                <li id="rule-lower">❌ Lowercase letter</li>
+                <li id="rule-number">❌ Number</li>
+                <li id="rule-special">❌ Special character</li>
+            </ul>
+        </div>
+
+        <div class="form-group">
+            <label for="role">Account Type</label>
+
+            <select id="role" required>
+                <option value="user">Job Seeker</option>
+                <option value="recruiter">Recruiter</option>
+            </select>
+        </div>
+
+        <div id="errorMsg" class="error-msg"></div>
+
+        <button id="registerBtn" disabled>
+            Register
+        </button>
+
+        <p class="auth-footer">
+            Already have an account?
+            <a href="login.html" class="btn secondary-btn">Login</a>
+        </p>
+
+    </div>
+</div>
+
+<script>
+
+const REGISTER_API =
+    ["localhost", "127.0.0.1"].includes(window.location.hostname)
+        ? "http://localhost:5000/api"
+        : `${window.location.origin}/api`;
+
+
+const nameInput = document.getElementById("name");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const roleInput = document.getElementById("role");
+const strengthBar = document.getElementById("strengthBar");
+const strengthText = document.getElementById("strengthText");
+const registerBtn = document.getElementById("registerBtn");
+const errorMsg = document.getElementById("errorMsg");
+const togglePassword = document.getElementById("togglePassword");
+const passwordRules = document.querySelector(".password-rules");
+
+let currentStrength = 0;
+let isSubmitting = false;
+
+const validations = {
+    length: password => password.length >= 8,
+    upper: password => /[A-Z]/.test(password),
+    lower: password => /[a-z]/.test(password),
+    number: password => /[0-9]/.test(password),
+    special: password => /[^A-Za-z0-9]/.test(password)
+};
+
+const rules = {
+    length: document.getElementById("rule-length"),
+    upper: document.getElementById("rule-upper"),
+    lower: document.getElementById("rule-lower"),
+    number: document.getElementById("rule-number"),
+    special: document.getElementById("rule-special")
+};
+
+const labels = {
+    length: "At least 8 characters",
+    upper: "Uppercase letter",
+    lower: "Lowercase letter",
+    number: "Number",
+    special: "Special character"
+};
+
+function updateRule(element, valid, text) {
+    element.textContent = `${valid ? "✅" : "❌"} ${text}`;
+}
+
+togglePassword.addEventListener("click", () => {
+    const isPassword = passwordInput.type === "password";
+
+    passwordInput.type = isPassword ? "text" : "password";
+    togglePassword.textContent = isPassword ? "Hide" : "Show";
+});
+
+
+passwordInput.addEventListener("input", () => {
+
+    const password = passwordInput.value;
+    let score = 0;
+
+    Object.keys(validations).forEach(key => {
+        const valid = validations[key](password);
+        if (valid) score++;
+        updateRule(
+            rules[key],
+            valid,
+            labels[key]
+        );
+    });
+
+    currentStrength = (score / 5) * 100;
+    strengthBar.style.width = `${currentStrength}%`;
+    strengthBar.classList.remove(
+        "weak",
+        "medium",
+        "strong"
+    );
+
+    if (score <= 2) {
+
+        strengthBar.classList.add("weak");
+        strengthText.textContent = "Weak password";
+        passwordRules.style.display = "block";
+
+    } else if (score < 5) {
+
+        strengthBar.classList.add("medium");
+        strengthText.textContent =`Medium password (${currentStrength}%)`;
+        passwordRules.style.display = "block";
+
+    } else {
+        strengthBar.classList.add("strong");
+        strengthText.textContent = "Strong password";
+        passwordRules.style.display = "none";
+    }
+
+    validateForm();
+});
+
+
+function validateForm() {
+
+    const emailPattern =/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    const valid =
+        nameInput.value.trim().length >= 3 &&
+        emailPattern.test(emailInput.value.trim()) &&
+        currentStrength === 100;
+
+    registerBtn.disabled = !valid;
+}
+
+[
+    nameInput,
+    emailInput,
+    passwordInput
+].forEach(input => {
+    input.addEventListener("input", validateForm);
+});
+
+emailInput.addEventListener("input", () => {
+    emailInput.value = emailInput.value.replace(/\s/g, "");
+    validateForm();
+});
+
+
+document.addEventListener("keydown", event => {
+
+    if (
+        event.key === "Enter" &&
+        !registerBtn.disabled &&
+        !isSubmitting
+    ) {
+        registerBtn.click();
+    }
+});
+
+
+registerBtn.addEventListener("click", async () => {
+
+    if (registerBtn.disabled || isSubmitting) return;
+    isSubmitting = true;
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim().toLowerCase();
+    const password = passwordInput.value;
+    const role = roleInput.value;
+
+    errorMsg.className = "error-msg";
+    errorMsg.textContent = "";
+    registerBtn.textContent = "Creating...";
+    registerBtn.disabled = true;
+
+    document.body.style.cursor = "wait";
+
+    try {
+
+        console.log("Registration API:", REGISTER_API);
+
+        const res = await fetch(
+            `${REGISTER_API}/auth/register`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    name,
+                    email,
+                    password,
+                    role
+                })
+            }
+        );
+
+        const contentType = res.headers.get("content-type") || "";
+
+        const data = contentType.includes("application/json")
+            ? await res.json()
+            : {};
+
+        if (!res.ok) {
+            throw new Error(
+                data.message || `Registration failed (${res.status})`
+            );
+        }
+
+        errorMsg.classList.add("success");
+        errorMsg.textContent =
+            "Account created successfully. Redirecting...";
+
+        setTimeout(() => {
+
+            window.location.href =`/auth/verify-otp.html?email=${encodeURIComponent(email)}`;
+
+        }, 1000);
+
+    } catch (err) {
+        console.error("Registration error:", err);
+        errorMsg.classList.add("error");
+        errorMsg.textContent =err.message || "Unable to connect to the server.";
+
+    } finally {
+        isSubmitting = false
+        document.body.style.cursor = "default";
+        registerBtn.textContent = "Register";
+        validateForm();
+    }
+});
+
+</script>
+</body>
+</html>

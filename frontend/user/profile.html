@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile | ProConnect</title>
+<link rel="stylesheet" href="/css/profile.css">
+</head>
+<body>
+<header class="navbar">
+  <h2 class="logo">ProConnect</h2>
+  <nav class="nav-links">
+  <a href="/pages/feed.html">Feed</a>
+  <a href="/pages/jobs.html">Jobs</a>
+  <a href="/user/messages.html">Messages</a>
+  <a href="/user/resume-builder.html">Resume</a>
+</nav>
+
+<div id="networkStatus">
+ 🟢 Online
+</div>
+  <div class="nav-actions">
+    <button onclick="location.href='/pages/notifications.html'">🔔</button>
+    <span id="notificationBadge" class="notification-badge"></span>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</header>
+<div class="layout">
+ <aside class="sidebar left">
+  <div class="card stat-card">
+    <h4><a href="/pages/connections.html">Connections</a></h4>
+    <span id="connectionCount">0</span>
+  </div>
+   <div class="card stat-card">
+    <button class="primary-btn edit-profile-btn"
+        type="button"
+        onclick="openEdit()">
+  Edit Profile
+</button>
+  </div>
+  <div class="card stat-card">
+    <h4>Profile Visitors</h4><span id="visitorCount">0</span><div id="visitorsList"></div>
+  </div>
+</aside>
+  <main class="main-content">
+<section class="profile-header card">
+  <div class="cover-wrapper">
+    <img id="cover-img" src="/images/default-cover.jpg" alt="Profile cover image" loading="lazy">
+    <button class="edit-cover-btn edit-btn" type="button" aria-label="Change cover image" onclick="document.getElementById('coverUpload').click()">
+      Change Cover
+    </button>
+    <input type="file" id="coverUpload" accept="image/*" hidden>
+  </div>
+  <div class="profile-row">
+    <div class="avatar-wrapper">
+      <img id="profile-img" src="/images/default-avatar.png" alt="Profile avatar" loading="lazy" >
+  <button type="button" class="avatar-edit-btn edit-btn" aria-label="Change profile picture" onclick="document.getElementById('avatarUpload').click()"> ✏️</button>
+      <input type="file" id="avatarUpload" accept="image/*" hidden>
+    </div>
+    <div class="profile-meta">
+      <h2 id="name"> Your Name</h2>
+      <p id="headline"></p>
+      <p id="location"></p>
+    </div>
+    <div class="profile-actions">
+      <button class="primary-btn edit-profile-btn" type="button"onclick="openEdit()">Edit Profile</button>
+    </div>
+  </div>
+</section>
+    <section class="card"> <h3>About</h3> <p id="about"></p></section>
+
+    <section class="card">
+      <h3>Contact</h3>
+      <p>Email: <span id="email"></span></p>
+      <p>Phone: <span id="phone"></span></p>
+      <p>Address: <span id="address"></span></p>
+    </section>
+    <section class="card">
+      <h3>Education</h3>
+      <div id="educationList" class="list-container"></div>
+
+      <div class="form-inline">
+        <input id="collegeName" placeholder="College Name">
+        <input id="degree" placeholder="Degree">
+        <input id="result" placeholder="CGPA">
+        <button class="edit-btn" onclick="addEducation()">Add</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Projects</h3>
+      <div id="projectList" class="list-container"></div>
+      <div class="form-inline">
+        <input id="projectTitle" placeholder="Title">
+        <input id="projectDesc" placeholder="Description">
+        <button class="edit-btn" onclick="addProject()">Add</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Certificates</h3>
+      <div id="certificateList" class="list-container"></div>
+      <div class="form-inline">
+        <input id="certName" placeholder="Name">
+        <input id="certOrg" placeholder="Organization">
+        <button class="edit-btn" onclick="addCertificate()">Add</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Skills</h3>
+      <div id="skillsList" class="skills-grid"></div>
+      <div class="form-inline">
+        <input id="skillInput" placeholder="Enter skill">
+        <button class="edit-btn" onclick="addSkill()">Add</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Resume</h3>
+      <a id="resumeLink" target="_blank">No resume uploaded</a>
+      <button class="primary-btn edit-btn" onclick="document.getElementById('resumeUpload').click()"> Upload Resume</button>
+      <input type="file" id="resumeUpload" accept=".pdf,.doc,.docx" hidden>
+    </section>
+
+    <section class="card create-post-card">
+      <textarea id="postContent" placeholder="Share something..."></textarea>
+      <input type="file" id="postImage" accept="image/*">
+      <button class="primary-btn edit-btn" onclick="createPost()">Post</button>
+    </section>
+    <section class="feed-section">
+  <h3>Recent Posts</h3>
+  <div id="feedPosts" class="list-container">
+    <p class="loading-feed">Loading feed...</p>
+  </div>
+</section>
+  </main>
+  <aside class="sidebar right">
+  <div class="suggestions-card">
+    <h3>People you may know</h3>
+    <div id="suggestedUsers">
+      <p>Loading suggestions...</p>
+    </div>
+  </div>
+</aside>
+
+</div>
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <h3>Edit Profile</h3>
+    <input id="editName" placeholder="Name">
+    <input id="editHeadline"placeholder="Headline">
+    <input id="editLocation"placeholder="Location">
+    <input id="editEmail"placeholder="Email">
+    <input id="editPhone"placeholder="Phone">
+    <input id="editAddress"placeholder="Address">
+    <textarea id="editAbout"placeholder="About"></textarea>
+    <div class="modal-actions">
+      <button class="primary-btn" onclick="saveProfile()">Save</button>
+      <button onclick="closeEdit()"> Cancel</button>
+    </div>
+  </div>
+</div>
+<script src="../js/config.js"></script>
+<script src="../js/utils/api.js"></script>
+<script src="../socket.io/socket.io.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/profile.js"></script>
+</body>
+</html>

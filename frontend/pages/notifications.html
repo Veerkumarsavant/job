@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications | ProConnect</title>
+<link rel="stylesheet" href="/css/notifications.css">
+</head>
+<body>
+<header class="navbar">
+  <h2>🔔 Notifications</h2>
+  <div class="nav-right">
+    <span id="notificationBadge" class="notification-badge"></span>
+    <button id="markAllBtn">Mark all read</button>
+  </div>
+</header>
+<div class="notifications-container" id="notificationsList">
+  <div class="empty-state">No notifications yet 🔔</div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+let token = localStorage.getItem("accessToken");
+if (!token) window.location.href = "/auth/login.html";
+let notifications = [];
+const list = document.getElementById("notificationsList");
+const badge = document.getElementById("notificationBadge");
+async function authFetch(url, options = {}) {
+  let res = await fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+      Authorization: "Bearer " + token
+    }
+  });
+  if (res.status === 401) {
+    const refreshRes = await fetch("/api/auth/refresh", {
+      method: "POST",
+      credentials: "include"
+    });
+    if (!refreshRes.ok) {
+      window.location.href = "/auth/login.html";
+      return;
+    }
+    const data = await refreshRes.json();
+    token = data.accessToken;
+    localStorage.setItem("accessToken", token);
+    reconnectSocket(token);
+    return fetch(url, {
+      ...options,
+      headers: {
+        ...options.headers,
+        Authorization: "Bearer " + token
+      }
+    });
+  }
+  return res;
+}
+async function loadNotifications() {
+  try {
+    list.innerHTML = "<p class='loading'>Loading...</p>";
+    const res = await authFetch("/api/notifications");
+    const data = await res.json();
+    notifications = data.notifications || [];
+    renderNotifications();
+  } catch (err) {
+    console.error("❌ Load error:", err);
+    list.innerHTML = "<div class='empty-state'>Failed ❌</div>";
+  }
+}
+function renderNotifications() {
+  list.innerHTML = "";
+  if (!notifications || notifications.length === 0) {
+    list.innerHTML = "<div class='empty-state'>No notifications 🔔</div>";
+    return;
+  }
+  notifications.forEach(n => {
+    list.appendChild(createNotificationElement(n));
+  });
+}
+
+function createNotificationElement(n) {
+  const div = document.createElement("div");
+  div.className = "notif " + (n.read ? "" : "unread");
+  const left = document.createElement("div");
+  left.className = "notif-left";
+  const avatar = document.createElement("img");
+  avatar.className = "notif-avatar";
+  avatar.src =
+  n.sender?.avatar
+    ? (
+        n.sender.avatar.startsWith("http")
+          ? n.sender.avatar
+          : n.sender.avatar
+      )
+    : "/images/default-avatar.png";
+
+avatar.onerror = () => {
+  avatar.src = "/images/default-avatar.png";
+};
+  const text = document.createElement("div");
+  text.className = "notif-text";
+  const name = document.createElement("strong");
+name.textContent = n.sender?.name || "Someone";
+
+const msg = document.createElement("span");
+msg.textContent = " " + (n.message || "");
+
+const time = document.createElement("small");
+time.textContent =
+  new Date(n.createdAt).toLocaleString();
+
+text.appendChild(name);
+text.appendChild(msg);
+text.appendChild(time);
+  left.appendChild(avatar);
+  left.appendChild(text);
+  const actions = document.createElement("div");
+  actions.className = "actions";
+  if (!n.read) {
+    const markBtn = document.createElement("button");
+    markBtn.textContent = "✔";
+    markBtn.onclick = async (e) => {
+      e.stopPropagation();
+      await markOne(n._id);
+    };
+    actions.appendChild(markBtn);
+  }
+  const delBtn = document.createElement("button");
+  delBtn.textContent = "❌";
+  delBtn.onclick = async (e) => {
+    e.stopPropagation();
+    await deleteNotif(n._id);
+  };
+  actions.appendChild(delBtn);
+  div.onclick = () =>
+  openNotification(
+    n._id,
+    n.link || "/notifications.html"
+  );
+  div.appendChild(left);
+  div.appendChild(actions);
+  return div;
+}
+function markLocalRead(id) {
+  const n = notifications.find(n => n._id === id);
+  if (n) n.read = true;
+}
+
+async function openNotification(id, link) {
+  await markOne(id);
+  window.location.href = link || "/notifications.html";
+}
+
+async function markOne(id) {
+  const prev = [...notifications];
+  markLocalRead(id);
+  renderNotifications();
+  try {
+    await authFetch(`/api/notifications/read/${id}`, {
+      method: "PUT"
+    });
+  } catch (err) {
+    notifications = prev;
+    renderNotifications();
+  }
+  loadCount();
+}
+
+async function deleteNotif(id) {
+  const prev = [...notifications];
+  notifications = notifications.filter(n => n._id !== id);
+  renderNotifications();
+  try {
+    await authFetch(`/api/notifications/${id}`, {
+      method: "DELETE"
+    });
+  } catch (err) {
+    notifications = prev;
+    renderNotifications();
+  }
+  loadCount();
+}
+
+async function markAllRead() {
+  const prev = [...notifications];
+  notifications.forEach(n => n.read = true);
+  renderNotifications();
+  try {
+    await authFetch("/api/notifications/read/all", {
+      method: "PUT"
+    });
+  } catch (err) {
+    notifications = prev;
+    renderNotifications();
+  }
+  loadCount();
+}
+
+async function loadCount() {
+  try {
+    const res = await authFetch("/api/notifications/unread-count");
+    const data = await res.json();
+    badge.innerText =
+  data.count > 0
+    ? data.count
+    : "";
+  } catch (err) {
+    console.error(err);
+  }
+}
+const socket = io({
+  auth: { token }
+});
+
+function reconnectSocket(newToken) {
+  socket.disconnect();
+  socket.auth = { token: newToken };
+  socket.connect();
+}
+function showToast(message) {
+
+  const toast = document.createElement("div");
+
+  toast.className = "toast";
+  toast.innerText = message;
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 3000);
+}
+
+socket.on("notification", (n) => {
+
+  if (notifications.some(x => x._id === n._id)) {
+    return;
+  }
+
+  notifications.unshift(n);
+
+  renderNotifications();
+
+  const unread =
+    notifications.filter(n => !n.read).length;
+
+  badge.innerText = unread || "";
+
+  showToast("🔔 New Notification");
+});
+
+document.getElementById("markAllBtn").onclick = markAllRead;
+loadNotifications();
+loadCount();
+
+
+window.addEventListener(
+  "beforeunload",
+  () => {
+    socket.disconnect();
+  }
+);
+</script>
+</body>
+</html>

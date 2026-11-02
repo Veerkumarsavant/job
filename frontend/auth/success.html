@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+(async () => {
+  const params = new URLSearchParams(window.location.search);
+  const rawToken = params.get("token");
+
+  const token = rawToken
+    ? decodeURIComponent(rawToken).trim()
+    : null;
+
+  if (!token || token.split(".").length !== 3) {
+    console.error("Invalid token:", token);
+    window.location.href = "/auth/login.html";
+    return;
+  }
+
+  // clear old token
+  localStorage.removeItem("accessToken");
+  localStorage.setItem("accessToken", token);
+
+  try {
+    const res = await fetch("/api/auth/me", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (!res.ok) throw new Error("Auth failed");
+
+    const user = await res.json();
+
+    console.log("GOOGLE LOGIN USER:", user);
+
+    localStorage.setItem("user", JSON.stringify(user));
+
+    const role = user?.role?.toLowerCase();
+
+    if (role === "admin") {
+      window.location.replace("/admin/dashboard.html");
+    } else if (role === "recruiter") {
+      window.location.replace("/recruiter/dashboard.html");
+    } else {
+      window.location.replace("../pages/feed.html");
+    }
+
+  } catch (err) {
+    console.error("Google login error:", err);
+    localStorage.removeItem("accessToken");
+    window.location.href = "/auth/login.html";
+  }
+})();
+</script>
+</body>
+</html>

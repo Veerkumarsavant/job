@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Connections | ProConnect</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../css/connections.css">
+</head>
+<body>
+<header class="navbar">
+  <div class="nav-left"><h2>Connections</h2></div>
+
+  <nav class="nav-right" aria-label="Page Navigation">
+    <a href="feed.html" class="back-btn"> ← Back to Feed</a>
+    <div id="socketStatus"class="status offline"role="status"aria-live="polite">● Connecting...</div>
+  </nav>
+</header>
+
+<main class="container">
+  <section class="card">
+    <input type="text"id="connectionSearch"placeholder="Search connections..."class="search-input"aria-label="Search connections">
+    <div id="searchEmpty"class="empty-state"style="display:none;">No results found</div>
+  </section>
+  <section class="card">
+    <h3>Pending Requests</h3>
+    <div id="requestsList"></div>
+    <div id="pendingEmpty"class="empty-state"style="display:none;">No pending requests.</div>
+  </section>
+
+  <section class="card">
+  <h3>Your Connections</h3>
+  <div class="loader" id="connectionsLoader" style="display:none;">Loading...</div>
+  <div id="acceptedList"></div>
+  <div id="acceptedEmpty" class="empty-state" style="display:none;">
+    <p>No connections yet</p>
+    <small>Start connecting with professionals</small>
+  </div>
+</section>
+
+  <section class="card">
+  <h3>People You May Know</h3>
+
+  <div id="suggestions"></div>
+
+  <div id="suggestionsEmpty" class="empty-state" style="display:none;">
+    <p>No suggestions available</p>
+    <small>Check back later for new connections</small>
+  </div>
+</section>
+</main>
+
+<script src="/js/config.js" defer></script>
+<script src="/js/utils/api.js" defer></script>
+<script src="/js/auth.js" defer></script>
+<script src="/socket.io/socket.io.js" defer></script>
+<script src="/js/connections.js" defer></script>
+
+</body>
+</html>

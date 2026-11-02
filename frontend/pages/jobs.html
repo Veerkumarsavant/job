@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jobs | ProConnect</title>
+<link rel="stylesheet" href="../css/jobs.css">
+</head>
+<body>
+<header class="navbar">
+  <h2>ProConnect Jobs</h2>
+  <div class="nav-links">
+    <a href="/pages/feed.html">Feed</a>
+    <a href="/user/profile.html">Profile</a>
+    <a href="/pages/my-jobs.html">My Jobs</a>
+    <a href="/pages/notifications.html">Notifications
+  <span id="notificationBadge">0</span>
+</a>
+    <button id="logoutBtn">Logout</button>
+  </div>
+</header>
+<main class="jobs-container">
+  <section class="job-search">
+    <input id="keyword" type="text"placeholder="Job Title"aria-label="Job Title">
+    <input id="location" type="text" placeholder="Location"aria-label="Location">
+    <select id="jobType">
+      <option value="">All Types</option>
+      <option value="fulltime">Full-Time</option>
+      <option value="parttime">Part-Time</option>
+      <option value="remote">Remote</option>
+      <option value="internship">Internship</option>
+    </select>
+    <button id="searchBtn">Search Jobs</button>
+  </section>
+  <section>
+    <div id="jobsList" class="jobs-list">
+      <div class="skeleton-container">
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+      </div>
+    </div>
+  </section>
+  <nav class="pagination" aria-label="Job Pagination">
+    <button id="prevPage">Previous</button>
+    <span id="pageInfo"> Page 1</span>
+    <button id="nextPage"> Next</button>
+    </nav>
+
+ <section class="recommended-jobs">
+  <h2>Recommended Jobs</h2>
+
+  <div id="recommendedJobs">
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <p>Loading recommendations...</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<div id="jobModal" class="modal hidden" role="dialog"aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-content">
+    <span id="closeModalBtn" class="close-btn">&times;</span>
+    <h2 id="modalTitle"></h2>
+    <p><strong id="modalCompany"></strong></p>
+    <p id="modalLocation"></p>
+    <div class="modal-grid">
+      <div>
+        <small>💰 Salary</small>
+        <p id="modalSalary">Not disclosed</p>
+      </div>
+      <div>
+        <small>🎓 Experience</small>
+        <p id="modalExperience"> Not specified</p>
+      </div>
+    </div>
+    <div id="modalSkills" class="skills-container"></div>
+    <hr>
+    <p id="modalDescription"></p>
+    <button id="modalApplyBtn"class="apply-btn">Apply Now</button>
+  </div>
+</div>
+<footer class="footer">
+  <p> © 2026 ProConnect. All rights reserved.</p>
+</footer>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/utils/api.js"></script>
+<script src="/js/config.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/jobs.js"></script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP | ProConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #eef2ff, #f8fafc);
+            color: #1f2937;
+        }
+
+        .card {
+            background: white;
+            padding: 32px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            color: #6366f1;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin: 0 0 10px;
+        }
+
+        .description {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        #emailText {
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .otp-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 24px 0;
+        }
+
+        .otp-input {
+            width: 48px;
+            height: 52px;
+            padding: 0;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .otp-input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #6366f1, #7c3aed);
+            color: white;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .resend {
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+
+        .timer {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 14px;
+        }
+
+        #msg {
+            font-size: 13px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .error {
+            color: #dc2626;
+        }
+
+        .success {
+            color: #059669;
+        }
+
+        @media (max-width: 360px) {
+            .card {
+                padding: 24px 16px;
+            }
+
+            .otp-container {
+                gap: 5px;
+            }
+
+            .otp-input {
+                width: 40px;
+                height: 48px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="card">
+
+    <div class="logo">ProConnect</div>
+
+    <h2>Verify Your Email</h2>
+
+    <p class="description">
+        Enter the six-digit verification code sent to:
+    </p>
+
+    <p id="emailText"></p>
+
+    <form id="verifyForm">
+
+        <div class="otp-container">
+
+            <input class="otp-input" aria-label="OTP digit 1"
+                inputmode="numeric" autocomplete="one-time-code"
+                maxlength="1" pattern="[0-9]" required>
+
+            <input class="otp-input" aria-label="OTP digit 2"
+                inputmode="numeric" maxlength="1"
+                pattern="[0-9]" required>
+
+            <input class="otp-input" aria-label="OTP digit 3"
+                inputmode="numeric" maxlength="1"
+                pattern="[0-9]" required>
+
+            <input class="otp-input" aria-label="OTP digit 4"
+                inputmode="numeric" maxlength="1"
+                pattern="[0-9]" required>
+
+            <input class="otp-input" aria-label="OTP digit 5"
+                inputmode="numeric" maxlength="1"
+                pattern="[0-9]" required>
+
+            <input class="otp-input" aria-label="OTP digit 6"
+                inputmode="numeric" maxlength="1"
+                pattern="[0-9]" required>
+
+        </div>
+
+        <button type="submit" id="verifyBtn">
+            Verify Email
+        </button>
+
+    </form>
+
+    <button type="button" id="resendBtn" class="resend" disabled>
+        Resend OTP
+    </button>
+
+    <div class="timer" id="timer">
+        Resend available in 30 seconds
+    </div>
+
+    <p id="msg" role="status" aria-live="polite"></p>
+
+</main>
+<script src="/js/verify-otp.js"></script>
+
+</body>
+</html>

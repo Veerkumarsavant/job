@@ -1,0 +1,144 @@
+body {
+  margin: 0;
+  font-family: system-ui;
+  background: #f4f6f9;
+}
+.navbar {
+  position: sticky;
+  top: 0;
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 60px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+  z-index: 1000;
+}
+
+.nav-links a {
+  margin: 0 20px;
+  text-decoration: none;
+  color: #444;
+  font-weight: 500;
+}
+
+.nav-links a.active {
+  color: #2563eb;
+}
+
+
+.main-content {
+  padding: 40px 80px;
+}
+
+#jobsContainer > div {
+  background: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+}
+
+
+
+.chat-panel {
+  position: fixed;
+  right: -100%;
+  top: 0;
+  width: 700px;
+  height: 100vh;
+  background: white;
+  display: flex;
+  transition: 0.4s ease;
+  box-shadow: -20px 0 60px rgba(0,0,0,0.2);
+  z-index: 2000;
+}
+
+.chat-panel.active {
+  right: 0;
+}
+
+
+
+.chat-panel {
+  position: fixed;
+  right: -100%;
+  top: 0;
+  width: 700px;
+  height: 100vh;
+  background: white;
+  display: flex;
+  transition: 0.4s ease;
+  box-shadow: -20px 0 60px rgba(0,0,0,0.2);
+  z-index: 2000;
+}
+
+.chat-panel.active {
+  right: 0;
+}
+
+
+
+
+.card {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.08);
+}
+
+
+
+body.dark .card {
+  background: rgba(30,41,59,0.7);
+}
+
+
+
+.job-card {
+  transition: all 0.3s ease;
+}
+
+.job-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.15);
+}
+
+
+.job-card:hover {
+  border: 1px solid #2563eb;
+}
+
+
+
+
+.chat-panel {
+  position: fixed;
+  right: -100%;
+  top: 0;
+  width: 700px;
+  height: 100vh;
+  background: white;
+  display: flex;
+  transition: 0.4s ease;
+  box-shadow: -20px 0 60px rgba(0,0,0,0.2);
+}
+
+.chat-panel.active {
+  right: 0;
+}
+
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+  padding: 40px 80px;
+}
+
+.card {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.08);
+}

@@ -1,0 +1,279 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+  transition: all 0.3s ease;
+}
+
+body {
+  background: linear-gradient(135deg, #eef2f3, #dfe9f3);
+  min-height: 100vh;
+  animation: fadeIn 0.8s ease;
+  color: #333;
+}
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 65px;
+  backdrop-filter: blur(20px);
+  background: rgba(255,255,255,0.7);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+}
+
+.logo {
+  font-weight: 700;
+  color: #0a66c2;
+  letter-spacing: 1px;
+  font-size: 1.5rem;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+#searchInput {
+  padding: 8px 15px;
+  width: 250px;
+  border-radius: 25px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: rgba(255,255,255,0.6);
+  outline: none;
+  font-size: 0.9rem;
+}
+
+#searchInput:focus {
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(10, 102, 194, 0.2);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.nav-right a {
+  text-decoration: none;
+  font-size: 1.4rem;
+  color: #555;
+  position: relative;
+}
+
+.nav-right a:hover {
+  color: #0a66c2;
+  transform: translateY(-2px);
+}
+
+
+.container {
+  display: grid;
+  grid-template-columns: 260px 1fr 320px;
+  gap: 25px;
+  padding: 40px 60px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.left-sidebar, .right-sidebar, .feed {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+
+.card {
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(25px);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+  transform: translateY(0);
+  animation: floatCard 6s ease-in-out infinite;
+  border: 1px solid rgba(255,255,255,0.6);
+}
+
+@keyframes floatCard {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0px); }
+}
+
+
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 25px 70px rgba(0,0,0,0.15);
+}
+
+
+button {
+  padding: 8px 18px;
+  border-radius: 25px;
+  border: none;
+  background: linear-gradient(135deg, #0a66c2, #004182);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+button::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: -100%;
+  background: rgba(255,255,255,0.2);
+  transition: 0.4s;
+}
+
+button:hover::after {
+  left: 100%;
+}
+
+button:hover {
+  transform: scale(1.07);
+}
+
+
+.create-post textarea {
+  width: 100%;
+  height: 90px;
+  border-radius: 15px;
+  border: none;
+  padding: 15px;
+  resize: none;
+  background: rgba(0,0,0,0.05);
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.create-post textarea:focus {
+  background: rgba(0,0,0,0.08);
+  outline: none;
+}
+
+
+.job-card {
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 12px;
+  background: rgba(255,255,255,0.8);
+  transition: all 0.4s ease;
+  animation: slideUp 0.6s ease forwards;
+  opacity: 0;
+  border-left: 4px solid #0a66c2;
+}
+
+.job-card:nth-child(1) { animation-delay: 0.1s; }
+.job-card:nth-child(2) { animation-delay: 0.2s; }
+.job-card:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes slideUp {
+  from { transform: translateY(25px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.job-card:hover {
+  transform: scale(1.03);
+  background: #fff;
+}
+
+
+.suggestion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  animation: fadeIn 0.6s ease forwards;
+}
+
+.suggestion img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ddd;
+}
+
+.suggestion-info {
+  flex: 1;
+  margin-left: 10px;
+}
+
+.suggestion-info h5 {
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+}
+
+.suggestion-info p {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+
+#chatPopup {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 320px;
+  border-radius: 20px;
+  backdrop-filter: blur(25px);
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  animation: slideChat 0.5s ease;
+  z-index: 1000;
+  border: 1px solid rgba(255,255,255,0.5);
+}
+
+@keyframes slideChat {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.hidden {
+  display: none;
+}
+
+
+#chatPopup > div:first-child {
+  padding: 15px;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+
+@media (max-width: 1100px) {
+  .container {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  .left-sidebar,
+  .right-sidebar {
+    display: none;
+  }
+  
+  .nav-left input {
+    width: 150px;
+  }
+}

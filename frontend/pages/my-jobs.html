@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Applications | ProConnect</title>
+  <link rel="stylesheet" href="../css/my-jobs.css">
+</head>
+<body>
+  <header class="navbar">
+    <h2 class="logo">      ProConnect</h2>
+    <nav class="nav-links">
+      <a href="/pages/feed.html">Feed</a>
+      <a href="/pages/jobs.html">Jobs</a>
+      <a href="/user/profile.html">Profile</a>
+    </nav>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </header>
+  <main class="page-container">
+    <div class="page-header">
+      <h1> My Applications</h1>
+      <p>Track all jobs you have applied for</p>
+    </div>
+    <div
+      id="applications"
+      class="applications-grid"
+    >
+
+      <div class="loading">
+        Loading applications...
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ================= SCRIPT ================= -->
+
+  <script>
+
+    const applicationsContainer =
+      document.getElementById("applications");
+
+    function logout() {
+
+      localStorage.removeItem("accessToken");
+
+      window.location.href =
+        "/auth/login.html";
+
+    }
+
+    function getStatusClass(status = "") {
+
+      status = status.toLowerCase();
+
+      if (status.includes("accepted")) {
+        return "status accepted";
+      }
+
+      if (status.includes("rejected")) {
+        return "status rejected";
+      }
+
+      return "status pending";
+
+    }
+
+    async function loadApplications() {
+
+      try {
+
+        const token =
+          localStorage.getItem("accessToken");
+
+        if (!token) {
+
+          window.location.href =
+            "/auth/login.html";
+
+          return;
+
+        }
+
+        let res = await fetch(
+          "/api/applications/my-applications",
+          {
+            headers: {
+              Authorization:
+                "Bearer " + token
+            }
+          }
+        );
+
+        /* ================= TOKEN REFRESH ================= */
+
+        if (res.status === 401) {
+
+          const refreshRes = await fetch(
+            "/api/auth/refresh",
+            {
+              method: "POST",
+              credentials: "include"
+            }
+          );
+
+          if (refreshRes.ok) {
+
+            const data =
+              await refreshRes.json();
+
+            localStorage.setItem(
+              "accessToken",
+              data.accessToken
+            );
+
+            res = await fetch(
+              "/api/applications/my-applications",
+              {
+                headers: {
+                  Authorization:
+                    "Bearer " +
+                    data.accessToken
+                }
+              }
+            );
+
+          } else {
+
+            window.location.href =
+              "/auth/login.html";
+
+            return;
+
+          }
+
+        }
+
+        if (!res.ok) {
+          throw new Error(
+            "Failed to fetch applications"
+          );
+        }
+
+        const apps = await res.json();
+
+        /* ================= EMPTY STATE ================= */
+
+        if (!apps.length) {
+
+          applicationsContainer.innerHTML = `
+            <div class="empty-state">
+              <h3>No applications yet</h3>
+              <p>
+                Start applying for jobs to see them here.
+              </p>
+
+              <a
+                href="/pages/jobs.html"
+                class="browse-btn"
+              >
+                Browse Jobs
+              </a>
+            </div>
+          `;
+
+          return;
+
+        }
+
+        applicationsContainer.innerHTML =
+          apps.map(app => {
+            const job = app.job || {};
+            return `
+              <div class="application-card">
+                <div class="card-top">
+                  <div>
+                    <h3 class="job-title">${job.title || "Untitled Job"}</h3>
+                    <p class="company-name">${job.company || "Unknown Company"}</p>
+                  </div>
+                  <span class="${getStatusClass(app.status)}">${app.status || "Pending"}</span>
+                </div>
+                <div class="job-meta">
+                  <span>📍 ${job.location || "Remote"}</span>
+                  <span>💼 ${job.type || "Full-time"}</span>
+                </div>
+                <div class="card-footer">
+                  <a href="/pages/jobs.html?id=${job._id}" class="view-btn">View Job</a>
+                </div>
+              </div>`;
+          }).join("");
+      } catch (err) {
+        console.error(err);
+        applicationsContainer.innerHTML = `
+          <div class="error-state">
+            <h3>Failed to load applications</h3>
+            <p>Please try again later.</p>
+          </div>`;
+      }
+    }
+    loadApplications();
+  </script>
+</body>
+</html>
